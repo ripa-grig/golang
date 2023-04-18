@@ -90,8 +90,9 @@ jobs:
       - name: Get absolute path
         id: path
         run: |
-          pwd echo 'outp={}'>> $GITHUB_OUTPUT
-          realpath Dockerfile
+          pwd 
+      - name: test path
+        run: echo Path is ${{ steps.path.outputs.stdout }}
       - name: Build and Test project
         uses: docker/build-push-action@v4.0.0
         with:
@@ -103,7 +104,7 @@ jobs:
             GO_ALPINE_VERSION=1.20.2-alpine3.17
       - name: Test
         run: |
-          docker run -v ${{ steps.path.outputs.outp }}:/go/testdir golangtest:latest
+          docker run -v ${{ steps.path.outputs.stdout }}:/go/testdir golangtest:latest
           ls
       - name: Upload tests file
         uses: actions/upload-artifact@v3
