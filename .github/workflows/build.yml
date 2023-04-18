@@ -98,7 +98,7 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: golang:latest
           file: ./Dockerfile
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
