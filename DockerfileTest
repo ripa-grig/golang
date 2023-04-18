@@ -1,8 +1,7 @@
-ARG ARTIFACTORY_FQDN
-ARG ALPINE_VERSION
 ARG GO_ALPINE_VERSION
 
-FROM ${ARTIFACTORY_FQDN}/raider-docker-dev/golang:${GO_ALPINE_VERSION} as builder
+# Build the manager binary
+FROM golang:${GO_ALPINE_VERSION} as builder
 # RUN apt-get update && \
 # apt-get install -y xvfb wkhtmltopdf ghostscript
 WORKDIR /go/testdir
