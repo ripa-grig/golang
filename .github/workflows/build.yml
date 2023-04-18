@@ -15,10 +15,6 @@ jobs:
   ra_version:
     permissions:
       packages: write
-      actions: read
-      contents: write          # for actions/checkout to fetch code
-      pull-requests: write
-      security-events: write  # for github/codeql-action/upload-sarif to upload SARIF results
 
     name: "Generate versions from common workflow"
     # uses: "Rockwell-Automation-FTDS/configuration-cd/.github/workflows/raver.yml@1.3.3"
