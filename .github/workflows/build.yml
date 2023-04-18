@@ -105,8 +105,10 @@ jobs:
           build-args: |
             GO_ALPINE_VERSION=1.20.2-alpine3.17
       - name: Test
+        env:
+          absPath: ${{ steps.today.outputs.stdout }}
         run: |
-          docker run -v ${{ steps.today.outputs.stdout }}:/go/testdir golangtest:latest
+          docker run -v "$absPath":/go/testdir golangtest:latest
           ls
       - name: Upload tests file
         uses: actions/upload-artifact@v3
