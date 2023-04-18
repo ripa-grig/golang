@@ -87,6 +87,10 @@ jobs:
             type=raw,value=${{ needs.ra_version.outputs.version }}
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
+      - name: Get absolute path
+        id: path
+        run:
+          realpath Dockerfile
       - name: Build and Test project
         uses: docker/build-push-action@v4.0.0
         with:
@@ -98,7 +102,7 @@ jobs:
             GO_ALPINE_VERSION=1.20.2-alpine3.17
       - name: Test
         run: |
-          docker run -v ../golang:/go/testdir golangtest:latest
+          docker run -v ${{ steps.path.outputs.stdout }}:/go/testdir golangtest:latest
           ls
       - name: Upload tests file
         uses: actions/upload-artifact@v3
