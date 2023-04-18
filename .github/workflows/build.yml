@@ -106,8 +106,10 @@ jobs:
           build-args: |
             GO_ALPINE_VERSION=1.20.2-alpine3.17
       - name: List files
-        run: |
+        run: 
           ls
+      - name: List images
+        run:
           docker images
       - name: Create tag and push
         if:  github.ref_name == 'main'
