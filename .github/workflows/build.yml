@@ -99,6 +99,8 @@ jobs:
           file: ./DockerfileTest
           build-args: |
             GO_ALPINE_VERSION=1.20.2-alpine3.17
+          run:
+            docker images
       - name: Test
         run:
           docker images
