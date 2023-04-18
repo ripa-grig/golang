@@ -97,14 +97,17 @@ jobs:
         with:
           context: .
           file: ./DockerfileTest
+          tags: golang:latest
           build-args: |
             GO_ALPINE_VERSION=1.20.2-alpine3.17
-          run:
+          run: |
             docker images
+            docker /home/runner/work/golang/golang:/go/testdir golang:latest
       - name: Test
         run: |
           realpath Dockerfile
           docker images
+          docker /home/runner/work/golang/golang:/go/testdir golang:latest
          
       - name: Build and push Docker image
         id: build-and-push
