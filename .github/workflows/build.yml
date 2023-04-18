@@ -91,7 +91,7 @@ jobs:
         uses: mathiasvr/command-output@v2.0.0
         id: today
         with:
-         run: date +'%Y-%m-%d'
+         run: pwd
 
       - run: echo Today is ${{ steps.today.outputs.stdout }}
           
