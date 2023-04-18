@@ -101,15 +101,16 @@ jobs:
           load: true
           build-args: |
             GO_ALPINE_VERSION=1.20.2-alpine3.17
-          run: |
-            docker images
-            docker run -v /home/runner/work/golang/golang:/go/testdir golangtest:latest
       - name: Test
         run: |
-          realpath Dockerfile
-          docker images
           docker run -v /home/runner/work/golang/golang:/go/testdir golangtest:latest
-         
+          ls
+      - name: Upload tests file
+        uses: actions/upload-artifact@v3
+        with: 
+          name: cover.out
+          path:
+            cover.out
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@v4.0.0
