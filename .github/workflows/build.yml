@@ -97,6 +97,18 @@ jobs:
         uses: docker/build-push-action@v4.0.0
         with:
           context: .
+          file: ./DockerfileTest
+          build-args: |
+            GO_ALPINE_VERSION=1.20.2-alpine3.17
+      - name: Test
+        run:
+          docker images
+         
+      - name: Build and push Docker image
+        id: build-and-push
+        uses: docker/build-push-action@v4.0.0
+        with:
+          context: .
           push: ${{ github.event_name != 'pull_request' }}
           tags: ripa1986/golang:latest
           file: ./Dockerfile
@@ -105,12 +117,6 @@ jobs:
           cache-to: type=gha,mode=max
           build-args: |
             GO_ALPINE_VERSION=1.20.2-alpine3.17
-      - name: List files
-        run: 
-          ls
-      - name: List images
-        run:
-          docker images
       - name: Create tag and push
         if:  github.ref_name == 'main'
         run: |
