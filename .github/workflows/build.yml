@@ -60,11 +60,6 @@ jobs:
           # version: '<version>' # default is latest (stable)
           token: ${{ secrets.GITHUB_TOKEN }} # only needed if version is 'latest'
 
-      - name: Use Go ${{ env.GO_VERSION }}
-        uses: actions/setup-go@v4
-        with:
-          go-version: ${{ env.GO_VERSION }}
-          check-latest: true
       #- name: Login to ghcr.io
       #  uses: docker/login-action@v2
       #  with:
