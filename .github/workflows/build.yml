@@ -98,7 +98,7 @@ jobs:
             GO_ALPINE_VERSION=1.20.2-alpine3.17
       - name: Test
         run: |
-          docker run -v .:/go/testdir golangtest:latest
+          docker run -v ../golang:/go/testdir golangtest:latest
           ls
       - name: Upload tests file
         uses: actions/upload-artifact@v3
