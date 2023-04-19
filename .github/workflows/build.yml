@@ -45,9 +45,13 @@ jobs:
       - name: Test
         run: |
           docker run -v ${{ env.ABSOLUTE_PATH }}:/go/testdir golangtest:latest
-          mkdir coverage
-          gocover-cobertura < cover.out > coverage/cobertura-coverage.xml
           ls
+      - name: Update coverage report
+        uses: ncruces/go-coverage-report@v0
+        with:
+          report: 'true'
+          chart: 'true'
+          amend: 'false'
       - name: Upload tests file
         uses: actions/upload-artifact@v3
         with: 
