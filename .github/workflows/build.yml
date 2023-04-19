@@ -22,9 +22,40 @@ jobs:
     # uses: "Rockwell-Automation-FTDS/configuration-cd/.github/workflows/raver.yml@1.3.3"
     uses: "./.github/workflows/raver.yml"
 
+  run-unit-tests:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout git repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Get absolute path
+        id: path
+        run: echo "ABSOLUTE_PATH=$(pwd)" >> $GITHUB_ENV
+      - name: Build and Test project
+        uses: docker/build-push-action@v4.0.0
+        with:
+          context: .
+          file: ./DockerfileTest
+          tags: golangtest:latest
+          load: true
+          build-args: |
+            GO_ALPINE_VERSION=1.20.2-alpine3.17
+      - name: Test
+        run: |
+          docker run -v ${{ env.ABSOLUTE_PATH }}:/go/testdir golangtest:latest
+          ls
+      - name: Upload tests file
+        uses: actions/upload-artifact@v3
+        with: 
+          name: cover.out
+          path:
+            cover.out
+
   build-image:
     name: Build Image
-    needs: ra_version
+    needs: [ra_version,run-unit-tests]
     runs-on: ubuntu-latest
 
     permissions:
@@ -87,28 +118,7 @@ jobs:
             type=raw,value=${{ needs.ra_version.outputs.version }}
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
-      - name: Get absolute path
-        id: path
-        run: echo "ABSOLUTE_PATH=$(pwd)" >> $GITHUB_ENV
-      - name: Build and Test project
-        uses: docker/build-push-action@v4.0.0
-        with:
-          context: .
-          file: ./DockerfileTest
-          tags: golangtest:latest
-          load: true
-          build-args: |
-            GO_ALPINE_VERSION=1.20.2-alpine3.17
-      - name: Test
-        run: |
-          docker run -v ${{ env.ABSOLUTE_PATH }}:/go/testdir golangtest:latest
-          ls
-      - name: Upload tests file
-        uses: actions/upload-artifact@v3
-        with: 
-          name: cover.out
-          path:
-            cover.out
+     
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@v4.0.0
