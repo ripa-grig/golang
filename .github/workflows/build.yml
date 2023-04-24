@@ -193,6 +193,7 @@ jobs:
           if [ $up -eq 0 ]; then
             if [ $tries -gt $attempt ]; then
             sleep 10
+            up=`echo $avpods | awk '{split($0, out, "/"); print (out[1] == out[2])}'`
             attempt=$((attempt + 1))
             fi 
           else 
