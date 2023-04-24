@@ -177,7 +177,8 @@ jobs:
             --set image.repository=ghcr.io/ripa-grig/golang \
             --set image.tag=${{ needs.ra_version.outputs.version }} 
           sleep 15
-          kubectl describe deploy golang-demo -n golang-system
+          kubectl get all -A
+          kubectl describe deployment golang-demo -n golang-system
           kubectl rollout status deployment golang-demo -n golang-system
       - name: Create tag and push
         if:  github.ref_name == 'main'
