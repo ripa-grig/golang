@@ -193,7 +193,7 @@ jobs:
           if [ $up -eq 0 ]; then
             if [ $tries -gt $attempt ]; then
             sleep 10
-            $attempt
+            attempt=$((attempt + 1))
             fi 
           else 
             kubectl logs -n golang-system $podname
