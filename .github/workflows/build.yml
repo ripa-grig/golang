@@ -172,17 +172,13 @@ jobs:
             --docker-server=https://ghcr.io \
             --docker-username=${{ secrets.DH_USERNAME }} \
             --docker-password=${{ secrets.DH_PASSWORD }}
-          # helm template auditlogging oci://ghcr.io/ripa-grig/charts/golang \
-          #   --version ${{ needs.ra_version.outputs.chart_version }} \
-          #   --set image.repository=ghcr.io/ripa-grig/golang \
-          #   --set image.tag=${{ needs.ra_version.outputs.version }} -n golang-system | kubectl apply -n golang-system -f -
-            helm upgrade --install auditlogging -n golang-system  oci://ghcr.io/ripa-grig/charts/golang \
+            helm upgrade --install golang-demo -n golang-system  oci://ghcr.io/ripa-grig/charts/golang-demo \
             --version ${{ needs.ra_version.outputs.chart_version }} \
             --set image.repository=ghcr.io/ripa-grig/golang \
             --set image.tag=${{ needs.ra_version.outputs.version }} \
           sleep 15
-          kubectl describe deploy auditlogging -n golang-system
-          kubectl rollout status deployment auditlogging -n golang-system
+          kubectl describe deploy golang-demo -n golang-system
+          kubectl rollout status deployment golang-demo -n golang-system
       - name: Create tag and push
         if:  github.ref_name == 'main'
         run: |
