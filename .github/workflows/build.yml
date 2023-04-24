@@ -183,8 +183,8 @@ jobs:
           helm uninstall golang-demo -n golang-system
       - name: Check if deployment is successful
         run: |
-          podname=`kubectl get pods -n golang-system  | grep auditlogging | awk '{ print $1 }'`
-          avpods=`kubectl get pods -n golang-system  | grep auditlogging | awk '{ print $2 }'`
+          podname=`kubectl get pods -n golang-system  | grep golang-demo | awk '{ print $1 }'`
+          avpods=`kubectl get pods -n golang-system  | grep golang-demo | awk '{ print $2 }'`
           up=`echo $avpods | awk '{split($0, out, "/"); print (out[1] == out[2])}'`
           echo "POD: $avpods"
           echo "UP: $up"
