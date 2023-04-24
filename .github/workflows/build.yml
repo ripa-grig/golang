@@ -188,7 +188,6 @@ jobs:
           up=`echo $avpods | awk '{split($0, out, "/"); print (out[1] == out[2])}'`
           echo "POD: $avpods"
           echo "UP: $up"
-          kubectl logs -n golang-system $podname
           tries=5
           attempt=0
           if [ $up -eq 0 ]; then
@@ -196,6 +195,8 @@ jobs:
             sleep 10
             $attempt
             fi 
+          else 
+            kubectl logs -n golang-system $podname
           fi    
       - name: Create tag and push
         if:  github.ref_name == 'main'
