@@ -191,7 +191,7 @@ jobs:
           tries=5
           attempt=0
           if [ $up -eq 0 ]; then
-            if [$tries > $attempt ]; then
+            if [$tries -gt $attempt ]; then
             sleep 10
             $attempt
             fi 
