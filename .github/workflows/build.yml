@@ -195,6 +195,7 @@ jobs:
             echo "UP: $up"
             attempt=$((attempt + 1))
             sleep 10
+            kubectl get pods -n golang-system
           done
 
           kubectl logs -n golang-system $podname
