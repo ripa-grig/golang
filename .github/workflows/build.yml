@@ -190,15 +190,19 @@ jobs:
           echo "UP: $up"
           tries=5
           attempt=0
-          if [ $up -eq 0 ]; then
-            if [ $tries -gt $attempt ]; then
+          while [ $(echo $avpods | awk '{split($0, out, "/"); print (out[1] == out[2])}') -eq 0 && $tries -gt $attempt]; do
+            echo "UP: $up"
             sleep 10
-            up=`echo $avpods | awk '{split($0, out, "/"); print (out[1] == out[2])}'`
-            attempt=$((attempt + 1))
-            fi 
-          else 
+          done
+          up=`echo $avpods | awk '{split($0, out, "/"); print (out[1] == out[2])}'`
+
+          kubectl logs -n golang-system $podname
+          if [ $up -eq 0 ]; then
+            echo "pod is not ready"
+          else
+            echo "pod is ready"
             kubectl logs -n golang-system $podname
-          fi    
+          fi
       - name: Create tag and push
         if:  github.ref_name == 'main'
         run: |
