@@ -2,18 +2,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    control-plane: golang-manager
-  name: golang-manager
+    control-plane: golang-demo
+  name: golang-demo
   namespace: golang-system
 spec:
   replicas: 1
   selector:
     matchLabels:
-      control-plane: golang-manager
+      control-plane: golang-demo
   template:
     metadata:
       labels:
-        control-plane: golang-manager
+        control-plane: golang-demo
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -26,7 +26,7 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      serviceAccountName: golang-manager
+      serviceAccountName: golang-demo
       terminationGracePeriodSeconds: 10
       {{- with .Values.nodeSelector }}
       nodeSelector:
