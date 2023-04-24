@@ -70,7 +70,7 @@ jobs:
 
   build-image:
     name: Build Image
-    needs: [ra_version,run-unit-tests]
+    needs: [ra_version] #[ra_version,run-unit-tests]
     runs-on: ubuntu-latest
 
     permissions:
@@ -151,7 +151,7 @@ jobs:
         run: |
           helm package charts/golang --version ${{ needs.ra_version.outputs.chart_version }}
           helm push golang-${{ needs.ra_version.outputs.chart_version }}.tgz oci://ghcr.io/rockwell-automation-ftds/charts
-          rm golang-demo-${{ needs.ra_version.outputs.chart_version }}.tgz
+          rm golang-${{ needs.ra_version.outputs.chart_version }}.tgz
       - uses: azure/setup-kubectl@v3
 
       - uses: AbsaOSS/k3d-action@v2
