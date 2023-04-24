@@ -150,7 +150,7 @@ jobs:
       - name: Publish Helm chart to GHCR
         run: |
           helm package charts/golang --version ${{ needs.ra_version.outputs.chart_version }}
-          helm push golang-${{ needs.ra_version.outputs.chart_version }}.tgz oci://ghcr.io/ripa-grig/charts
+          helm push golang-${{ needs.ra_version.outputs.chart_version }}.tgz oci://ghcr.io/rockwell-automation-ftds/charts
           rm golang-${{ needs.ra_version.outputs.chart_version }}.tgz
       - uses: azure/setup-kubectl@v3
 
@@ -168,23 +168,21 @@ jobs:
         run: |
           kubectl get all -A
           kubectl create namespace golang-system
-          kubectl create secret docker-registry ra-creg -n app \
+          kubectl create secret docker-registry ra-creg -n golang-system \
             --docker-server=https://ghcr.io \
             --docker-username=${{ secrets.DH_USERNAME }} \
             --docker-password=${{ secrets.DH_PASSWORD }}
           # helm template auditlogging oci://ghcr.io/ripa-grig/charts/golang \
           #   --version ${{ needs.ra_version.outputs.chart_version }} \
           #   --set image.repository=ghcr.io/ripa-grig/golang \
-          #   --set image.tag=${{ needs.ra_version.outputs.version }} -n app | kubectl apply -n app -f -
-            helm upgrade --install auditlogging -n app  oci://ghcr.io/ripa-grig/charts/golang \
+          #   --set image.tag=${{ needs.ra_version.outputs.version }} -n golang-system | kubectl apply -n golang-system -f -
+            helm upgrade --install auditlogging -n golang-system  oci://ghcr.io/ripa-grig/charts/golang \
             --version ${{ needs.ra_version.outputs.chart_version }} \
             --set image.repository=ghcr.io/ripa-grig/golang \
             --set image.tag=${{ needs.ra_version.outputs.version }} \
           sleep 15
-          kubectl describe svc auditlogging -n app
-          kubectl describe deploy auditlogging -n app
-          kubectl get all -A
-          kubectl rollout status deployment auditlogging -n app
+          kubectl describe deploy auditlogging -n golang-system
+          kubectl rollout status deployment auditlogging -n golang-system
       - name: Create tag and push
         if:  github.ref_name == 'main'
         run: |
