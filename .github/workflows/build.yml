@@ -179,7 +179,7 @@ jobs:
           sleep 15
           kubectl get all -A
           kubectl describe deployment golang-demo -n golang-system
-          $podName= kubectl get pods -n golang-system --no-headers -o custom-columns=":metadata.name"
+          $podName = kubectl get pods -n golang-system --no-headers -o custom-columns=':metadata.name'
           kubectl get pod $podName -n golang-system -o jsonpath="Status: {.status.phase}"
           helm uninstall golang-demo -n golang-system
 
