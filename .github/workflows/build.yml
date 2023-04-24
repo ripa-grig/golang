@@ -140,13 +140,51 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ripa1986/golangdemo:latest
+          tags: ripa1986/golangdemo:${{ needs.ra_version.outputs.chart_version }}
           file: ./Dockerfile
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
             GO_ALPINE_VERSION=1.20.2-alpine3.17
+      - name: Publish Helm chart to GHCR
+        run: |
+          helm package charts/golang --version ${{ needs.ra_version.outputs.chart_version }}
+          helm push auditlogging-${{ needs.ra_version.outputs.chart_version }}.tgz oci://ghcr.io/rockwell-automation-ftds/charts
+          rm auditlogging-${{ needs.ra_version.outputs.chart_version }}.tgz
+      - uses: azure/setup-kubectl@v3
+
+      - uses: AbsaOSS/k3d-action@v2
+        with:
+          cluster-name: "gha-cluster"
+          args: >-
+            -p "8083:80@agent:0:direct"
+            -p "8443:443@agent:0:direct"
+            -p "5053:53/udp@agent:0:direct"
+            --agents 1
+            --image docker.io/rancher/k3s:v1.24.12-k3s1
+            --k3s-arg "--no-deploy=traefik,metrics-server@server:*"
+      - name: k3d test environment
+        run: |
+          kubectl get all -A
+          kubectl create namespace golang-system
+          kubectl create secret docker-registry ra-creg -n app \
+            --docker-server=https://ghcr.io \
+            --docker-username=${{ secrets.DH_USERNAME }} \
+            --docker-password=${{ secrets.DH_PASSWORD }}
+          # helm template auditlogging oci://ghcr.io/rockwell-automation-ftds/charts/olang \
+          #   --version ${{ needs.ra_version.outputs.chart_version }} \
+          #   --set image.repository=ghcr.io/rockwell-automation-ftds/golang-demo \
+          #   --set image.tag=${{ needs.ra_version.outputs.version }} -n app | kubectl apply -n app -f -
+            helm upgrade --install auditlogging -n app  oci://ghcr.io/rockwell-automation-ftds/charts/golang \
+            --version ${{ needs.ra_version.outputs.chart_version }} \
+            --set image.repository=ghcr.io/rockwell-automation-ftds/golang-demo \
+            --set image.tag=${{ needs.ra_version.outputs.version }} \
+          sleep 15
+          kubectl describe svc auditlogging -n app
+          kubectl describe deploy auditlogging -n app
+          kubectl get all -A
+          kubectl rollout status deployment auditlogging -n app
       - name: Create tag and push
         if:  github.ref_name == 'main'
         run: |
