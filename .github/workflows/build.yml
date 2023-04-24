@@ -150,8 +150,8 @@ jobs:
       - name: Publish Helm chart to GHCR
         run: |
           helm package charts/golang --version ${{ needs.ra_version.outputs.chart_version }}
-          helm push golang-demo-${{ needs.ra_version.outputs.chart_version }}.tgz oci://ghcr.io/rockwell-automation-ftds/charts
-          rm golang-demo-${{ needs.ra_version.outputs.chart_version }}.tgz
+          helm push golang-${{ needs.ra_version.outputs.chart_version }}.tgz oci://ghcr.io/rockwell-automation-ftds/charts
+          rm golang-${{ needs.ra_version.outputs.chart_version }}.tgz
       - uses: azure/setup-kubectl@v3
 
       - uses: AbsaOSS/k3d-action@v2
@@ -174,11 +174,11 @@ jobs:
             --docker-password=${{ secrets.DH_PASSWORD }}
           # helm template auditlogging oci://ghcr.io/rockwell-automation-ftds/charts/olang \
           #   --version ${{ needs.ra_version.outputs.chart_version }} \
-          #   --set image.repository=ghcr.io/rockwell-automation-ftds/golang-demo \
+          #   --set image.repository=ghcr.io/rockwell-automation-ftds/golang \
           #   --set image.tag=${{ needs.ra_version.outputs.version }} -n app | kubectl apply -n app -f -
             helm upgrade --install auditlogging -n app  oci://ghcr.io/rockwell-automation-ftds/charts/golang \
             --version ${{ needs.ra_version.outputs.chart_version }} \
-            --set image.repository=ghcr.io/rockwell-automation-ftds/golang-demo \
+            --set image.repository=ghcr.io/rockwell-automation-ftds/golang \
             --set image.tag=${{ needs.ra_version.outputs.version }} \
           sleep 15
           kubectl describe svc auditlogging -n app
