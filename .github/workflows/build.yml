@@ -180,7 +180,6 @@ jobs:
           kubectl get all -A
           kubectl describe deployment golang-demo -n golang-system
           kubectl get pods -n golang-system --no-headers -o custom-columns=':metadata.name'
-          helm uninstall golang-demo -n golang-system
       - name: Check if deployment is successful
         run: |
           podname=`kubectl get pods -n golang-system  | grep golang-demo | awk '{ print $1 }'`
@@ -203,6 +202,8 @@ jobs:
             echo "pod is ready"
             kubectl logs -n golang-system $podname
           fi
+          helm uninstall golang-demo -n golang-system
+
       - name: Create tag and push
         if:  github.ref_name == 'main'
         run: |
