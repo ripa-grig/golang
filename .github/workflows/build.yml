@@ -180,6 +180,7 @@ jobs:
           kubectl get all -A
           kubectl describe deployment golang-demo -n golang-system
           kubectl get pods -n golang-system
+          kubectl get secrets -n golang-system
           
       - name: Check if deployment is successful
         run: |

@@ -19,7 +19,7 @@ image:
 
 imageConfig:
   pullPolicy: IfNotPresent
-imagePullSecrets: [name: ra-creg, name: az-creg]
+imagePullSecrets: [name: ra-creg]
 
 config:
   enabled: true
