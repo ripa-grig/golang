@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"sampleapp/operators"
-	"sampleapp/print"
+	"github.com/ripa-grig/golang/operators"
+	"github.com/ripa-grig/golang/print"
 )
 
 func main() {
