@@ -192,7 +192,7 @@ jobs:
           echo "UP: $up"
           tries=5
           attempt=0
-          kubectl describe pod $avpods -n golang-system
+          kubectl describe pod $podname -n golang-system
           while [ $up -eq 0 -a $tries -gt $attempt ]; do
             up=`echo $avpods | awk '{split($0, out, "/"); print (out[1] == out[2])}'`
             echo "UP: $up"
