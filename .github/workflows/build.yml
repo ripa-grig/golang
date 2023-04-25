@@ -127,7 +127,7 @@ jobs:
         with:
           images: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-            ${{ secrets.ACR_ENDPOINT }}/${{ env.IMAGE_NAME }}
+            ripa1986/golangdemo
           flavor: |
             latest=false
           tags: |
@@ -141,7 +141,7 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ripa1986/golangdemo:${{ needs.ra_version.outputs.chart_version }}
+          tags: ${{ steps.meta.outputs.tags }}
           file: ./Dockerfile
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
