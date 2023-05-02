@@ -1,4 +1,4 @@
-name: "Golang Build & Publish"
+name: "Create Tag"
 
 on:
   workflow_dispatch:
