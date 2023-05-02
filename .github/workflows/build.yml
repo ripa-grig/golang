@@ -2,7 +2,7 @@ name: "Golang Build & Publish"
 
 on:
   workflow_dispatch:
-  push:
+  # push:
 
 env:
   # Use docker.io for Docker Hub if empty
