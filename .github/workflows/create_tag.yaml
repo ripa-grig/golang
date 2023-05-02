@@ -27,9 +27,14 @@ jobs:
       security-events: write  # for github/codeql-action/upload-sarif to upload SARIF results
 
     steps:
-      - name: Create tag and push
-        # if:  github.ref_name == 'main'
-        run: |
-          echo "Pushing new version ${{ needs.ra_version.outputs.version }} "
-          git tag ${{ needs.ra_version.outputs.version }} && git push --tags
+      - uses: actions/checkout@v3
+      - uses: rickstaa/action-create-tag@v1
+        id: "tag_create"
+        with:
+          tag: ${{ needs.ra_version.outputs.version }}
+          tag_exists_error: false
+
+      # Print result using the action output.
+      - run: |
+          echo "Tag already present: ${{ steps.tag_create.outputs.tag_exists }}"
           
